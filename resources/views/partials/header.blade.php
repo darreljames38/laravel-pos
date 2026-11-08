@@ -1,37 +1,31 @@
 <header class="site-header">
     <nav class="navbar">
-        <a href="{{ route('home') }}" class="logo">
-            POS System
+        <a href="{{ route('tasks.today') }}" class="logo">
+            SystemHub
         </a>
 
-        <div class="nav-links">
-            <a
-                href="{{ route('home') }}"
-                class="{{ request()->routeIs('home') ? 'active' : '' }}"
-            >
-                Home
-            </a>
+        <div class="system-navigation">
+            <details class="system-menu">
+                <summary>POS System</summary>
 
-            <a
-                href="{{ route('customers.index') }}"
-                class="{{ request()->routeIs('customers.*') ? 'active' : '' }}"
-            >
-                Customers
-            </a>
+                <div class="dropdown-menu">
+                    <a href="{{ route('pos.home') }}">POS Home</a>
+                    <a href="{{ route('customers.index') }}">Customers</a>
+                    <a href="{{ route('users.index') }}">Users</a>
+                    <a href="{{ route('pos.about') }}">About POS</a>
+                </div>
+            </details>
 
-            <a
-                href="{{ route('users.index') }}"
-                class="{{ request()->routeIs('users.*') ? 'active' : '' }}"
-            >
-                Users
-            </a>
+            <details class="system-menu">
+                <summary>Tasks Today</summary>
 
-            <a
-                href="{{ route('about') }}"
-                class="{{ request()->routeIs('about') ? 'active' : '' }}"
-            >
-                About
-            </a>
+                <div class="dropdown-menu">
+                    <a href="{{ route('tasks.today') }}">Today's Tasks</a>
+                    <a href="{{ route('tasks.index') }}">All Tasks</a>
+                    <a href="{{ route('tasks.profile') }}">Profile</a>
+                    <a href="{{ route('tasks.about') }}">About Tasks</a>
+                </div>
+            </details>
         </div>
     </nav>
 </header>

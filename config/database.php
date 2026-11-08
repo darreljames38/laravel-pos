@@ -64,6 +64,24 @@ return [
             ]) : [],
         ],
 
+        'tasks' => [
+            'driver' => 'mysql',
+            'host' => env('TASKS_DB_HOST', '127.0.0.1'),
+            'port' => env('TASKS_DB_PORT', '3306'),
+            'database' => env('TASKS_DB_DATABASE', 'laravel_tasks_today'),
+            'username' => env('TASKS_DB_USERNAME', 'root'),
+            'password' => env('TASKS_DB_PASSWORD', ''),
+            'unix_socket' => env('TASKS_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+],
+
+
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

@@ -26,11 +26,23 @@ Route::get('/about', [TasksAboutController::class, 'index'])
 Route::get('/pos', [PageController::class, 'landing'])
     ->name('pos.home');
 
-Route::get('/customers', [CustomerController::class, 'index'])
-    ->name('customers.index');
+Route::resource('customers', CustomerController::class)
+    ->only([
+        'index',
+        'create',
+        'store',
+        'edit',
+        'update',
+    ]);
 
-Route::get('/users', [UserController::class, 'index'])
-    ->name('users.index');
+Route::resource('users', UserController::class)
+    ->only([
+        'index',
+        'create',
+        'store',
+        'edit',
+        'update',
+    ]);
 
 Route::get('/pos/about', [PageController::class, 'about'])
     ->name('pos.about');

@@ -76,20 +76,52 @@ class UserController extends Controller
             ],
         ]);
 
+        // Do not send the UploadedFile object to the database.
+        unset($validated['avatar']);
+
         if ($request->hasFile('avatar')) {
             $uploadedFile = $request->file('avatar');
 
-            $filename = Str::uuid() . '.webp';
+            $filename = Str::uuid() . '.jpg';
             $path = 'avatars/' . $filename;
 
-            $preparedImage = Image::read($uploadedFile)
-                ->cover(300, 300)
-                ->toWebp(quality: 85);
+            // Intervention Image v4
+                   $imageData = file_get_contents(
+                    $uploadedFile->getPathname()
+                    );
 
-            Storage::disk('public')->put(
+                if ($imageData === false) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors([
+                  'avatar' => 'The uploaded image could not be read.',
+                ]);
+                    }
+
+                    $preparedImage = Image::decodeBinary($imageData)
+                    ->cover(300, 300)
+                    ->encodeUsingFileExtension(
+                    'jpg',
+                    quality: 85
+                    );
+
+
+
+
+            $stored = Storage::disk('public')->put(
                 $path,
-                (string) $preparedImage
+                $preparedImage
             );
+
+            if (! $stored) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors([
+                        'avatar' => 'The prepared avatar could not be stored.',
+                    ]);
+            }
 
             if (
                 $user->avatar &&
@@ -98,12 +130,6 @@ class UserController extends Controller
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            $validated['avatar'] = $path;
-        }
-
-        unset($validated['avatar']);
-
-        if (isset($path)) {
             $validated['avatar'] = $path;
         }
 

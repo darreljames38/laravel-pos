@@ -5,35 +5,115 @@
 @section('content')
     <section class="page-heading">
         <div>
-            <p class="eyebrow">Accounts</p>
+            <p class="eyebrow">POS Accounts</p>
+
             <h1>User Accounts</h1>
 
             <p class="description">
-                View all system users stored in the database.
+                Manage centralized user accounts and profile pictures.
             </p>
         </div>
+
+        <a href="{{ route('users.create') }}" class="button">
+            New User
+        </a>
     </section>
+
+    {{-- Success message --}}
+    @if (session('success'))
+        <div class="alert success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Error messages --}}
+    @if ($errors->any())
+        <div class="alert error">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
 
     <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <th>Avatar</th>
                     <th>ID</th>
                     <th>Username</th>
                     <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse ($users as $user)
                     <tr>
+                        <td>
+                            <img
+                                src="{{ $user->avatar
+                                    ? asset('storage/' . $user->avatar)
+                                    : asset('images/avatar-placeholder.svg') }}"
+                                alt="{{ $user->full_name }} avatar"
+                                class="user-avatar"
+                            >
+                        </td>
+
                         <td>{{ $user->id }}</td>
+
                         <td>{{ $user->username }}</td>
-                        <td>{{ $user->full_name }}</td>
+
+                        <td>
+                            {{ $user->full_name }}
+
+                            @if (auth()->id() === $user->id)
+                                <span class="current-user-label">
+                                    You
+                                </span>
+                            @endif
+                        </td>
+
+                        <td>
+                            {{ $user->email ?? 'No email assigned' }}
+                        </td>
+
+                        <td>
+                            <div class="table-actions">
+                                <a
+                                    href="{{ route('users.edit', $user) }}"
+                                    class="button small secondary"
+                                >
+                                    Edit
+                                </a>
+
+                                @if (auth()->id() !== $user->id)
+                                    <form
+                                        action="{{ route('users.destroy', $user) }}"
+                                        method="POST"
+                                        class="inline-form"
+                                        onsubmit="return confirm(
+                                            'Are you sure you want to delete this user account?'
+                                        )"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="button small danger"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3">
+                        <td colspan="6">
                             No user records were found.
                         </td>
                     </tr>

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -27,6 +29,12 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'email' => strtolower(
+                trim((string) $request->input('email'))
+            ),
+        ]);
+
         $validated = $request->validate([
             'username' => [
                 'required',
@@ -39,9 +47,28 @@ class UserController extends Controller
                 'string',
                 'max:100',
             ],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email',
+                'ends_with:@gmail.com',
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
         ]);
 
-        User::create($validated);
+        User::create([
+            'username' => trim($validated['username']),
+            'full_name' => trim($validated['full_name']),
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
 
         return redirect()
             ->route('users.index')
@@ -57,6 +84,12 @@ class UserController extends Controller
         Request $request,
         User $user
     ): RedirectResponse {
+        $request->merge([
+            'email' => strtolower(
+                trim((string) $request->input('email'))
+            ),
+        ]);
+
         $validated = $request->validate([
             'username' => [
                 'required',
@@ -69,6 +102,19 @@ class UserController extends Controller
                 'string',
                 'max:100',
             ],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'password' => [
+                'nullable',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
             'avatar' => [
                 'nullable',
                 'image',
@@ -76,38 +122,42 @@ class UserController extends Controller
             ],
         ]);
 
-        // Do not send the UploadedFile object to the database.
+        // Uploaded files and blank passwords must not be saved directly.
         unset($validated['avatar']);
+
+        $newPassword = (string) $request->input('password');
+
+        if ($newPassword === '') {
+            unset($validated['password']);
+        } else {
+            $validated['password'] = Hash::make($newPassword);
+        }
 
         if ($request->hasFile('avatar')) {
             $uploadedFile = $request->file('avatar');
 
-            $filename = Str::uuid() . '.jpg';
-            $path = 'avatars/' . $filename;
+            $imageData = file_get_contents(
+                $uploadedFile->getPathname()
+            );
 
-            // Intervention Image v4
-                   $imageData = file_get_contents(
-                    $uploadedFile->getPathname()
-                    );
-
-                if ($imageData === false) {
+            if ($imageData === false) {
                 return redirect()
                     ->back()
                     ->withInput()
                     ->withErrors([
-                  'avatar' => 'The uploaded image could not be read.',
-                ]);
-                    }
+                        'avatar' => 'The uploaded image could not be read.',
+                    ]);
+            }
 
-                    $preparedImage = Image::decodeBinary($imageData)
-                    ->cover(300, 300)
-                    ->encodeUsingFileExtension(
+            $filename = Str::uuid() . '.jpg';
+            $path = 'avatars/' . $filename;
+
+            $preparedImage = Image::decodeBinary($imageData)
+                ->cover(300, 300)
+                ->encodeUsingFileExtension(
                     'jpg',
                     quality: 85
-                    );
-
-
-
+                );
 
             $stored = Storage::disk('public')->put(
                 $path,
@@ -138,5 +188,29 @@ class UserController extends Controller
         return redirect()
             ->route('users.index')
             ->with('success', 'User updated successfully.');
+    }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        if (auth()->id() === $user->id) {
+            return redirect()
+                ->route('users.index')
+                ->withErrors([
+                    'user' => 'You cannot delete your own logged-in account.',
+                ]);
+        }
+
+        if (
+            $user->avatar &&
+            Storage::disk('public')->exists($user->avatar)
+        ) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Tasks;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tasks\User;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function show(): View
     {
-        $user = User::first();
+        $user = auth()->user();
 
         return view('tasks.profile', compact('user'));
     }

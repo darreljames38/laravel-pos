@@ -1,6 +1,6 @@
-/* ================================
+/* ========================================
    GLOBAL RESET AND COLOR VARIABLES
-================================ */
+======================================== */
 
 :root {
     --background: #03141e;
@@ -11,7 +11,8 @@
     --muted: #aebfc1;
     --white: #ffffff;
     --border: #527b7c;
-    --danger: #874141;
+    --danger: #a93f3f;
+    --danger-hover: #c94b4b;
     --success: #2f7d49;
 }
 
@@ -44,14 +45,20 @@ img {
 }
 
 button,
-input {
+input,
+select,
+textarea {
     font: inherit;
 }
 
+a {
+    color: inherit;
+}
 
-/* ================================
+
+/* ========================================
    SHARED HEADER AND NAVIGATION
-================================ */
+======================================== */
 
 .site-header {
     position: relative;
@@ -150,9 +157,60 @@ input {
 }
 
 
-/* ================================
+/* ========================================
+   AUTHENTICATION NAVIGATION
+======================================== */
+
+.auth-navigation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-navigation form,
+.logout-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.auth-link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    color: var(--white);
+}
+
+.auth-button {
+    min-height: 38px;
+    padding: 8px 14px;
+    color: var(--background);
+    background: var(--accent);
+    border: 0;
+    border-radius: 7px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+.auth-button:hover {
+    color: var(--white);
+    background: var(--surface-light);
+}
+
+.auth-user {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+
+/* ========================================
    MAIN LAYOUT
-================================ */
+======================================== */
 
 .container {
     width: min(1100px, 90%);
@@ -185,7 +243,8 @@ h1 {
     line-height: 1.1;
 }
 
-h2 {
+h2,
+h3 {
     color: var(--white);
 }
 
@@ -213,9 +272,9 @@ h2 {
 }
 
 
-/* ================================
+/* ========================================
    BUTTONS
-================================ */
+======================================== */
 
 .hero-actions,
 .form-actions {
@@ -268,6 +327,16 @@ h2 {
     background: var(--accent);
 }
 
+.button.danger {
+    color: var(--white);
+    background: var(--danger);
+}
+
+.button.danger:hover {
+    color: var(--white);
+    background: var(--danger-hover);
+}
+
 .button.small {
     min-height: 34px;
     padding: 7px 12px;
@@ -275,13 +344,14 @@ h2 {
 }
 
 
-/* ================================
+/* ========================================
    CARDS
-================================ */
+======================================== */
 
 .card,
 .task-card,
 .account-form,
+.auth-card,
 .table-wrapper {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -298,9 +368,9 @@ h2 {
 }
 
 
-/* ================================
+/* ========================================
    TABLES
-================================ */
+======================================== */
 
 .table-wrapper {
     overflow-x: auto;
@@ -337,10 +407,26 @@ tbody tr:last-child td {
     border-bottom: 0;
 }
 
+.table-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
 
-/* ================================
-   CUSTOMER AND USER FORMS
-================================ */
+.table-actions .button {
+    margin: 0;
+}
+
+.inline-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+
+/* ========================================
+   CUSTOMER, USER AND TASK FORMS
+======================================== */
 
 .account-form {
     width: min(650px, 100%);
@@ -359,7 +445,9 @@ tbody tr:last-child td {
     font-weight: 700;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
     min-height: 46px;
     padding: 12px 14px;
@@ -372,10 +460,21 @@ tbody tr:last-child td {
         box-shadow 0.2s ease;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgb(136 185 178 / 15%);
     outline: none;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
 .form-group input[type="file"] {
@@ -404,9 +503,75 @@ tbody tr:last-child td {
 }
 
 
-/* ================================
+/* ========================================
+   BREEZE LOGIN AND REGISTRATION
+======================================== */
+
+.auth-page {
+    width: min(460px, 90%);
+    min-height: calc(100vh - 145px);
+    margin: 0 auto;
+    padding: 4rem 0;
+    display: grid;
+    place-items: center;
+}
+
+.auth-card {
+    width: 100%;
+    padding: 2rem;
+}
+
+.auth-card h1 {
+    margin-bottom: 0.75rem;
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.auth-card .description {
+    margin-bottom: 1.5rem;
+}
+
+.auth-card form {
+    width: 100%;
+}
+
+.auth-card .button,
+.auth-card .auth-button {
+    width: 100%;
+}
+
+.auth-options {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.auth-options a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.auth-options a:hover {
+    color: var(--white);
+}
+
+.remember-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+}
+
+.remember-row input {
+    width: auto;
+    min-height: auto;
+}
+
+
+/* ========================================
    ALERTS
-================================ */
+======================================== */
 
 .alert {
     padding: 14px 18px;
@@ -431,9 +596,9 @@ tbody tr:last-child td {
 }
 
 
-/* ================================
+/* ========================================
    USER AVATARS
-================================ */
+======================================== */
 
 .user-avatar {
     width: 52px;
@@ -457,18 +622,28 @@ tbody tr:last-child td {
     gap: 18px;
 }
 
+.current-user-label {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.45rem;
+    color: var(--background);
+    background: var(--accent);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    vertical-align: middle;
+}
 
-/* ================================
+
+/* ========================================
    TASK MANAGEMENT
-================================ */
+======================================== */
 
 .task-grid {
     margin-top: 30px;
     display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(240px, 1fr)
-    );
+    grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
 }
 
@@ -485,6 +660,14 @@ tbody tr:last-child td {
     color: var(--accent);
 }
 
+.task-actions {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .status {
     padding: 5px 10px;
     display: inline-block;
@@ -498,6 +681,7 @@ tbody tr:last-child td {
     background: var(--accent);
 }
 
+.status-done,
 .status-completed {
     color: var(--white);
     background: var(--surface-light);
@@ -517,9 +701,9 @@ tbody tr:last-child td {
 }
 
 
-/* ================================
+/* ========================================
    FOOTER
-================================ */
+======================================== */
 
 .site-footer,
 footer {
@@ -530,11 +714,11 @@ footer {
 }
 
 
-/* ================================
+/* ========================================
    RESPONSIVE DESIGN
-================================ */
+======================================== */
 
-@media (max-width: 650px) {
+@media (max-width: 800px) {
     .navbar {
         padding: 16px 0;
         align-items: flex-start;
@@ -547,6 +731,11 @@ footer {
         align-items: stretch;
         flex-direction: column;
         gap: 6px;
+    }
+
+    .auth-navigation {
+        width: 100%;
+        flex-wrap: wrap;
     }
 
     .system-menu summary {
@@ -572,7 +761,8 @@ footer {
         flex-direction: column;
     }
 
-    .account-form {
+    .account-form,
+    .auth-card {
         padding: 20px;
     }
 
@@ -587,8 +777,38 @@ footer {
         width: 100%;
     }
 
+    .auth-options {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
     th,
     td {
         padding: 0.8rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .container {
+        width: min(94%, 1100px);
+    }
+
+    .table-actions,
+    .task-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .table-actions .button,
+    .table-actions form,
+    .table-actions form .button,
+    .task-actions .button,
+    .task-actions form,
+    .task-actions form .button {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2.3rem;
     }
 }

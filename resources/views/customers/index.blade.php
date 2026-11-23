@@ -6,6 +6,7 @@
     <section class="page-heading">
         <div>
             <p class="eyebrow">POS Accounts</p>
+
             <h1>Customer Accounts</h1>
 
             <p class="description">
@@ -18,9 +19,19 @@
         </a>
     </section>
 
+    {{-- Success message --}}
     @if (session('success'))
         <div class="alert success">
             {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Error messages --}}
+    @if ($errors->any())
+        <div class="alert error">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
         </div>
     @endif
 
@@ -32,7 +43,7 @@
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -40,16 +51,43 @@
                 @forelse ($customers as $customer)
                     <tr>
                         <td>{{ $customer->id }}</td>
+
                         <td>{{ $customer->full_name }}</td>
+
                         <td>{{ $customer->email }}</td>
-                        <td>{{ $customer->phone ?? 'Not provided' }}</td>
+
                         <td>
-                            <a
-                                href="{{ route('customers.edit', $customer) }}"
-                                class="button small secondary"
-                            >
-                                Edit
-                            </a>
+                            {{ $customer->phone ?? 'Not provided' }}
+                        </td>
+
+                        <td>
+                            <div class="table-actions">
+                                <a
+                                    href="{{ route('customers.edit', $customer) }}"
+                                    class="button small secondary"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="{{ route('customers.destroy', $customer) }}"
+                                    method="POST"
+                                    class="inline-form"
+                                    onsubmit="return confirm(
+                                        'Are you sure you want to delete this customer?'
+                                    )"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="button small danger"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+
 class PageController extends Controller
 {
-    public function landing()
+    /**
+     * Display the main SystemHub landing page.
+     */
+    public function index(): View
     {
         return view('landing');
     }
 
-    public function about()
+    /**
+     * Display the public About page.
+     */
+    public function about(): View
     {
         return view('about');
     }

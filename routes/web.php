@@ -2,47 +2,81 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\Tasks\AboutController as TasksAboutController;
-use App\Http\Controllers\Tasks\ProfileController;
+use App\Http\Controllers\Tasks\ProfileController as TaskProfileController;
 use App\Http\Controllers\Tasks\TaskController;
-use App\Http\Controllers\Tasks\WelcomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Tasks for Today
-Route::get('/', [WelcomeController::class, 'index'])
+/*
+|--------------------------------------------------------------------------
+| Public pages
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', [PageController::class, 'index'])
+    ->name('home');
+
+Route::get('/about', [PageController::class, 'about'])
+    ->name('about');
+
+/*
+|--------------------------------------------------------------------------
+| Public Task Management pages
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/today', [TaskController::class, 'today'])
     ->name('tasks.today');
 
 Route::get('/tasks', [TaskController::class, 'index'])
     ->name('tasks.index');
 
-Route::get('/profile', [ProfileController::class, 'index'])
-    ->name('tasks.profile');
+Route::get('/profile', [TaskProfileController::class, 'show'])
+    ->name('profile.show');
 
-Route::get('/about', [TasksAboutController::class, 'index'])
-    ->name('tasks.about');
+/*
+|--------------------------------------------------------------------------
+| Protected POS and Task management
+|--------------------------------------------------------------------------
+*/
 
-// POS System
-Route::get('/pos', [PageController::class, 'landing'])
-    ->name('pos.home');
+Route::middleware('auth')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | POS management
+    |--------------------------------------------------------------------------
+    */
 
-Route::resource('customers', CustomerController::class)
-    ->only([
-        'index',
-        'create',
-        'store',
-        'edit',
-        'update',
-    ]);
+    Route::resource('customers', CustomerController::class);
 
-Route::resource('users', UserController::class)
-    ->only([
-        'index',
-        'create',
-        'store',
-        'edit',
-        'update',
-    ]);
+    Route::resource('users', UserController::class);
 
-Route::get('/pos/about', [PageController::class, 'about'])
-    ->name('pos.about');
+    /*
+    |--------------------------------------------------------------------------
+    | Task management
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/tasks/create', [TaskController::class, 'create'])
+        ->name('tasks.create');
+
+    Route::post('/tasks', [TaskController::class, 'store'])
+        ->name('tasks.store');
+
+    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])
+        ->name('tasks.edit');
+
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])
+        ->name('tasks.update');
+
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
+        ->name('tasks.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Breeze authentication
+|--------------------------------------------------------------------------
+*/
+
+require __DIR__.'/auth.php';

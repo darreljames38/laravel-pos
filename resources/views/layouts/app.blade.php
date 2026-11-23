@@ -2,21 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'POS System')</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
+
+    <title>
+        @yield('title', 'SystemHub')
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/app.css') }}"
+    >
+
+    @stack('styles')
 </head>
+
 <body>
+    {{-- Shared SystemHub navigation --}}
+    @include('layouts.navigation')
 
-    @include('partials.header')
-
+    {{-- Page content --}}
     <main class="container">
         @yield('content')
     </main>
 
-    @include('partials.footer')
+    {{-- Shared footer --}}
+    <footer class="site-footer">
+        <p>
+            &copy; {{ date('Y') }} SystemHub.
+            Developed by Darrel James Sanchez.
+        </p>
+    </footer>
 
+    @stack('scripts')
 </body>
 </html>

@@ -22,6 +22,10 @@
                     <th>Title</th>
                     <th>Status</th>
                     <th>Task Date</th>
+
+                    @auth
+                        <th>Actions</th>
+                    @endauth
                 </tr>
             </thead>
 
@@ -30,16 +34,31 @@
                     <tr>
                         <td>{{ $task->id }}</td>
                         <td>{{ $task->title }}</td>
+
                         <td>
                             <span class="status status-{{ $task->status }}">
                                 {{ ucfirst($task->status) }}
                             </span>
                         </td>
+
                         <td>{{ $task->task_date->format('F d, Y') }}</td>
+
+                        @auth
+                            <td>
+                                <a
+                                    href="{{ route('tasks.edit', $task) }}"
+                                    class="button button-secondary"
+                                >
+                                    Edit
+                                </a>
+                            </td>
+                        @endauth
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4">No tasks were found.</td>
+                        <td colspan="{{ auth()->check() ? 5 : 4 }}">
+                            No tasks were found.
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Tasks\ProfileController as TaskProfileController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,9 +49,30 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('customers', CustomerController::class);
+    Route::resource('customers', CustomerController::class)
+        ->except(['show']);
 
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)
+        ->except(['show']);
+
+    Route::resource('items', ItemController::class);
+
+    Route::resource('customers', CustomerController::class)
+        ->except(['show']);
+
+    Route::resource('users', UserController::class)
+        ->except(['show']);
+
+    Route::resource('items', ItemController::class);
+
+    Route::get('/pos', [PosController::class, 'create'])
+        ->name('pos.create');
+
+    Route::post('/pos/checkout', [PosController::class, 'store'])
+        ->name('pos.checkout');
+
+    Route::get('/sales/{sale}', [PosController::class, 'show'])
+        ->name('sales.show');
 
     /*
     |--------------------------------------------------------------------------

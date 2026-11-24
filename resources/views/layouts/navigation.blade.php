@@ -24,6 +24,22 @@
                         >
                             Customers
                         </a>
+                        
+
+                        <a
+                            href="{{ route('items.index') }}"
+                            class="{{ request()->routeIs('items.*') ? 'active' : '' }}"
+                        >
+                            Items
+                        </a>
+
+                        <a
+                            href="{{ route('pos.create') }}"
+                           class="{{ request()->routeIs('pos.*', 'sales.show') ? 'active' : '' }}"
+                        >
+                            Cashier
+                        </a>
+
 
                         <a
                             href="{{ route('users.index') }}"

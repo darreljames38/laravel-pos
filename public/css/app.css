@@ -55,6 +55,10 @@ a {
     color: inherit;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 
 /* ========================================
    SHARED HEADER AND NAVIGATION
@@ -68,10 +72,10 @@ a {
 }
 
 .navbar {
+    display: flex;
     width: min(1100px, 90%);
     min-height: 70px;
     margin: 0 auto;
-    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 30px;
@@ -220,8 +224,8 @@ a {
 }
 
 .hero {
-    min-height: 65vh;
     display: flex;
+    min-height: 65vh;
     flex-direction: column;
     justify-content: center;
 }
@@ -255,8 +259,8 @@ h3 {
 }
 
 .page-heading {
-    margin-bottom: 2rem;
     display: flex;
+    margin-bottom: 2rem;
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
@@ -292,10 +296,10 @@ h3 {
 }
 
 .button {
+    display: inline-flex;
     width: fit-content;
     min-height: 42px;
     padding: 11px 20px;
-    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: var(--background);
@@ -343,6 +347,12 @@ h3 {
     font-size: 13px;
 }
 
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+}
+
 
 /* ========================================
    CARDS
@@ -365,6 +375,10 @@ h3 {
 
 .card h2 {
     margin-bottom: 10px;
+}
+
+.form-card {
+    width: min(700px, 100%);
 }
 
 
@@ -425,7 +439,7 @@ tbody tr:last-child td {
 
 
 /* ========================================
-   CUSTOMER, USER AND TASK FORMS
+   CUSTOMER, USER, ITEM AND TASK FORMS
 ======================================== */
 
 .account-form {
@@ -434,8 +448,8 @@ tbody tr:last-child td {
 }
 
 .form-group {
-    margin-bottom: 20px;
     display: flex;
+    margin-bottom: 20px;
     flex-direction: column;
     gap: 8px;
 }
@@ -508,11 +522,11 @@ tbody tr:last-child td {
 ======================================== */
 
 .auth-page {
+    display: grid;
     width: min(460px, 90%);
     min-height: calc(100vh - 145px);
     margin: 0 auto;
     padding: 4rem 0;
-    display: grid;
     place-items: center;
 }
 
@@ -540,8 +554,8 @@ tbody tr:last-child td {
 }
 
 .auth-options {
-    margin-top: 1rem;
     display: flex;
+    margin-top: 1rem;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
@@ -583,6 +597,10 @@ tbody tr:last-child td {
     margin: 4px 0;
 }
 
+.alert ul {
+    padding-left: 1.25rem;
+}
+
 .alert.success {
     color: #d7ffe0;
     background: #174b2b;
@@ -601,9 +619,9 @@ tbody tr:last-child td {
 ======================================== */
 
 .user-avatar {
+    display: block;
     width: 52px;
     height: 52px;
-    display: block;
     object-fit: cover;
     background: var(--surface);
     border: 2px solid var(--border);
@@ -616,8 +634,8 @@ tbody tr:last-child td {
 }
 
 .avatar-preview {
-    margin-bottom: 24px;
     display: flex;
+    margin-bottom: 24px;
     align-items: center;
     gap: 18px;
 }
@@ -636,12 +654,49 @@ tbody tr:last-child td {
 
 
 /* ========================================
+   STATUS LABELS
+======================================== */
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+}
+
+.status.pending,
+.status-pending {
+    color: var(--background);
+    background: var(--accent);
+}
+
+.status.done,
+.status.completed,
+.status-done,
+.status-completed {
+    color: var(--white);
+    background: var(--success);
+}
+
+.status.active {
+    color: #d7ffe0;
+    background: var(--success);
+}
+
+.status.inactive {
+    color: #ffd6d6;
+    background: var(--danger);
+}
+
+
+/* ========================================
    TASK MANAGEMENT
 ======================================== */
 
 .task-grid {
-    margin-top: 30px;
     display: grid;
+    margin-top: 30px;
     grid-template-columns:
         repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
@@ -661,30 +716,11 @@ tbody tr:last-child td {
 }
 
 .task-actions {
-    margin-top: 18px;
     display: flex;
+    margin-top: 18px;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-}
-
-.status {
-    padding: 5px 10px;
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    border-radius: 999px;
-}
-
-.status-pending {
-    color: var(--background);
-    background: var(--accent);
-}
-
-.status-done,
-.status-completed {
-    color: var(--white);
-    background: var(--surface-light);
 }
 
 .profile-card {
@@ -702,11 +738,336 @@ tbody tr:last-child td {
 
 
 /* ========================================
+   POS CASHIER
+======================================== */
+
+.pos-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.6fr)
+        minmax(340px, 0.9fr);
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.pos-products,
+.pos-cart-panel {
+    min-width: 0;
+    max-width: none;
+}
+
+.pos-cart-panel {
+    position: sticky;
+    top: 1rem;
+}
+
+.pos-section-heading {
+    display: flex;
+    margin-bottom: 1.25rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.pos-section-heading h2 {
+    margin: 0 0 0.25rem;
+}
+
+.pos-section-heading p {
+    margin: 0;
+    color: var(--muted);
+}
+
+#product-search {
+    width: min(100%, 300px);
+    min-height: 46px;
+    padding: 12px 14px;
+    color: var(--text);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#product-search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(136 185 178 / 15%);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.product-card {
+    display: flex;
+    min-height: 175px;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: rgb(255 255 255 / 4%);
+    border: 1px solid rgb(139 211 211 / 35%);
+    border-radius: 12px;
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.product-card:hover,
+.product-card:focus-visible {
+    background: rgb(139 211 211 / 10%);
+    border-color: #8bd3d3;
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.product-card[hidden] {
+    display: none !important;
+}
+
+.product-category,
+.product-sku,
+.product-stock {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.product-price {
+    margin-top: auto;
+    color: #8bd3d3;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+}
+
+.empty-state,
+.empty-cart {
+    padding: 2rem 1rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    margin-bottom: 1rem;
+}
+
+
+/* ========================================
+   POS CART
+======================================== */
+
+.cart-table-wrapper {
+    overflow-x: auto;
+}
+
+.cart-table {
+    min-width: 100%;
+}
+
+.cart-table td {
+    vertical-align: middle;
+}
+
+.cart-table td:first-child strong,
+.receipt-table td:first-child strong {
+    display: block;
+}
+
+.cart-table small,
+.receipt-table small {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--muted);
+}
+
+.quantity-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.quantity-button,
+.remove-cart-item {
+    display: inline-grid;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: var(--text);
+    cursor: pointer;
+    place-items: center;
+    background: rgb(255 255 255 / 8%);
+    border: 1px solid rgb(139 211 211 / 35%);
+    border-radius: 6px;
+}
+
+.quantity-button:hover {
+    color: var(--background);
+    background: var(--accent);
+}
+
+.quantity-input {
+    width: 55px;
+    min-height: 30px;
+    padding: 0.35rem;
+    color: var(--text);
+    text-align: center;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.remove-cart-item {
+    color: #ffaaaa;
+    border-color: rgb(255 100 100 / 40%);
+}
+
+.remove-cart-item:hover {
+    color: var(--white);
+    background: var(--danger);
+}
+
+.checkout-summary {
+    display: grid;
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    gap: 1rem;
+    border-top: 1px solid rgb(139 211 211 / 30%);
+}
+
+.checkout-summary > div:not(.form-group) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+.checkout-summary .change-row {
+    color: #8bd3d3;
+    font-size: 1.25rem;
+}
+
+.payment-group {
+    margin: 0;
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 1.25rem;
+}
+
+
+/* ========================================
+   POS RECEIPT
+======================================== */
+
+.receipt-card {
+    max-width: 760px;
+    padding: 2rem;
+    margin: 0 auto;
+    background: rgb(255 255 255 / 4%);
+    border: 1px solid rgb(139 211 211 / 35%);
+    border-radius: 14px;
+}
+
+.receipt-header {
+    padding-bottom: 1.5rem;
+    text-align: center;
+    border-bottom: 1px dashed rgb(139 211 211 / 40%);
+}
+
+.receipt-header h1 {
+    max-width: none;
+    margin: 0.25rem 0;
+}
+
+.receipt-number {
+    margin: 0.5rem 0 0;
+    font-family: monospace;
+}
+
+.receipt-information {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 1.5rem 0;
+    gap: 1rem;
+}
+
+.receipt-information div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.receipt-information span {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.receipt-table-wrapper {
+    overflow-x: auto;
+}
+
+.receipt-totals {
+    width: min(100%, 340px);
+    margin: 1.5rem 0 1.5rem auto;
+}
+
+.receipt-totals div {
+    display: flex;
+    padding: 0.5rem 0;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.receipt-change {
+    margin-top: 0.5rem;
+    color: #8bd3d3;
+    font-size: 1.2rem;
+    border-top: 1px solid rgb(139 211 211 / 35%);
+}
+
+.receipt-footer {
+    padding-top: 1.25rem;
+    color: var(--accent);
+    text-align: center;
+    border-top: 1px dashed rgb(139 211 211 / 40%);
+}
+
+.receipt-footer p {
+    margin: 0.25rem;
+}
+
+.receipt-actions {
+    display: flex;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+
+/* ========================================
    FOOTER
 ======================================== */
 
-.site-footer,
-footer {
+.site-footer {
     padding: 1.5rem;
     color: var(--accent);
     text-align: center;
@@ -717,6 +1078,16 @@ footer {
 /* ========================================
    RESPONSIVE DESIGN
 ======================================== */
+
+@media (max-width: 900px) {
+    .pos-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pos-cart-panel {
+        position: static;
+    }
+}
 
 @media (max-width: 800px) {
     .navbar {
@@ -762,7 +1133,8 @@ footer {
     }
 
     .account-form,
-    .auth-card {
+    .auth-card,
+    .form-card {
         padding: 20px;
     }
 
@@ -788,6 +1160,43 @@ footer {
     }
 }
 
+@media (max-width: 600px) {
+    .pos-section-heading {
+        flex-direction: column;
+    }
+
+    #product-search {
+        width: 100%;
+    }
+
+    .product-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .product-card {
+        min-height: 160px;
+        padding: 0.8rem;
+    }
+
+    .receipt-information {
+        grid-template-columns: 1fr;
+    }
+
+    .receipt-card {
+        padding: 1rem;
+    }
+
+    .receipt-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .receipt-actions .button {
+        width: 100%;
+    }
+}
+
 @media (max-width: 500px) {
     .container {
         width: min(94%, 1100px);
@@ -808,7 +1217,76 @@ footer {
         width: 100%;
     }
 
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
     h1 {
         font-size: 2.3rem;
+    }
+}
+
+
+/* ========================================
+   PRINTABLE RECEIPT
+======================================== */
+
+@media print {
+    body {
+        color: #000;
+        background: #fff;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    .receipt-card,
+    .receipt-card * {
+        visibility: visible !important;
+    }
+
+    .receipt-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: none;
+        padding: 1rem;
+        color: #000;
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .receipt-card h1,
+    .receipt-card h2,
+    .receipt-card h3,
+    .receipt-card strong,
+    .receipt-card span,
+    .receipt-card p,
+    .receipt-card table,
+    .receipt-card th,
+    .receipt-card td {
+        color: #000 !important;
+    }
+
+    .receipt-card th {
+        background: #eee !important;
+    }
+
+    .receipt-card th,
+    .receipt-card td {
+        border-color: #bbb !important;
+    }
+
+    .receipt-change,
+    .receipt-footer,
+    .receipt-information span {
+        color: #000 !important;
+    }
+
+    .no-print {
+        display: none !important;
     }
 }
